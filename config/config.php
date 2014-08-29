@@ -7,7 +7,7 @@ return array(
             'options' => array(),
             'baseUrl' => '',  //Full http link
             'baseUrlForLocal' => '',  //Path is better
-            'uploadPath' => __DIR__ . '/../uploads/',
+            'uploadPath' => __DIR__ . '/../uploads/wscn/',
             'uploadTmpPath' => __DIR__ . '/../uploads/',
             'uploadPathLevel' => 3,
             'allowExtensions' => 'jpg,png,jpeg,gif,rar,zip,7z,gz,doc,xls,docx,xlsx,ppt,pptx,pdf,mp3,mp4,wma',
