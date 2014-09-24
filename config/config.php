@@ -13,6 +13,7 @@ return array(
             'allowExtensions' => 'jpg,png,jpeg,gif,rar,zip,7z,gz,doc,xls,docx,xlsx,ppt,pptx,pdf,mp3,mp4,wma',
             'minFileSize' => 1,
             'maxFileSize' => 1048576 * 20, //20MB
+            'thumbClassSeparator'=>'!'
         ),
     ),
 );

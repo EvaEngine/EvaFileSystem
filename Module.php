@@ -22,6 +22,9 @@ class Module implements ModuleDefinitionInterface, StandardInterface
 
     public static function registerGlobalViewHelpers()
     {
+        return array(
+            'thumbWithClass' => 'Eva\EvaFileSystem\ViewHelpers\ThumbWithClass'
+        );
     }
 
     public static function registerGlobalRelations()
