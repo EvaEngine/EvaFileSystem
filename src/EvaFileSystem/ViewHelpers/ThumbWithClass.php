@@ -15,10 +15,16 @@ use Eva\EvaFileSystem\Entities\Files;
 
 class ThumbWithClass extends Files
 {
-    public function __invoke($filename, $class)
+    public function __invoke($filename, $class, $configKey = 'default')
     {
-        $config = $this->getConfig();
-        $classSeparator = $config->thumbClassSeparator ? $config->thumbClassSeparator : '!';
-        return $filename . $classSeparator . $class;
+        $config = $this->getDI()->getConfig();
+        if (isset($config->thumbnail->$configKey->baseUri) && $baseUrl = $config->thumbnail->$configKey->baseUri) {
+            $config = $this->getConfig();
+            $classSeparator = $config->thumbClassSeparator ? $config->thumbClassSeparator : '!';
+            $uri = $filename . $classSeparator . $class;
+
+            return $baseUrl . $uri;
+        }
+
     }
 } 
