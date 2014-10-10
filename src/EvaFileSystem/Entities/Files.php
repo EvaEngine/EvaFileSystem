@@ -32,6 +32,7 @@ class Files extends \Eva\EvaEngine\Mvc\Model
      */
     public $storageAdapter;
 
+
     /**
      *
      * @var string
@@ -121,8 +122,10 @@ class Files extends \Eva\EvaEngine\Mvc\Model
      * @var integer
      */
     public $createdAt;
-
-    private $configKey = 'default';
+    /**
+     * @var string
+     */
+    public  $configKey = 'default';
 
     private $configReady = false;
 
