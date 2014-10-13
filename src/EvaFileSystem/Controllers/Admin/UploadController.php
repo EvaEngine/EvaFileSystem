@@ -34,7 +34,7 @@ class UploadController extends ControllerBase implements JsonControllerInterface
             $files = $this->request->getUploadedFiles();
             //Only allow upload the first file by force
             $file = $files[0];
-            $file = $upload->upload($file, 'userAvatar');
+            $file = $upload->upload($file);
             if ($file) {
                 $fileinfo = $file->toArray();
                 $fileinfo['localUrl'] = $file->getLocalUrl();

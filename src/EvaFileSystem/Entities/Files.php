@@ -191,9 +191,9 @@ class Files extends \Eva\EvaEngine\Mvc\Model
 
     public function readConfig()
     {
-        if (true === $this->configReady) {
-            return $this;
-        }
+//        if (true === $this->configReady) {
+//            return $this;
+//        }
         $config = $this->getConfig();
 
         $this->uploadPath = $config->uploadPath;
