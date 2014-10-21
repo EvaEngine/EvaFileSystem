@@ -2,7 +2,9 @@
 
 namespace Eva\EvaFileSystem\Models;
 
+use Eva\EvaFileSystem\Adapter\AdapterFactory;
 use Eva\EvaFileSystem\Entities\Files;
+use Eva\EvaUser\Entities\Users;
 use Eva\EvaUser\Models\Login as LoginModel;
 use Eva\EvaEngine\Exception;
 use Phalcon\Text;
@@ -45,7 +47,7 @@ class Upload extends Files
         }
     }
 
-    public function upload(File $file)
+    public function upload(File $file, $configKey = 'default', Users $user = null)
     {
         if ($file->getError()) {
             throw new Exception\IOException('ERR_FILE_UPLOAD_FAILED');
@@ -84,17 +86,24 @@ class Upload extends Files
             'fileExtension' => $fileExtension,
             'fileHash' => $fileHash,
             'isImage' => $isImage,
+            'configKey' => $configKey,
             'fileName' => $fileName . '.' . $fileExtension,
             'createdAt' => time(),
         );
-
+        if ($user != null && $user->id > 0) {
+            $fileinfo['User'] = $user;
+        }
         if ($isImage) {
             $image = getimagesize($tmp);
             $fileinfo['imageWidth'] = $image[0];
             $fileinfo['imageHeight'] = $image[1];
         }
-
-        $filesystem = $this->getDI()->getFileSystem();
+        /** @var \Gaufrette\Adapter $filesystem */
+        if ($configKey == 'default') {
+            $filesystem = $this->getDI()->getFileSystem();
+        } else {
+            $filesystem = AdapterFactory::getAdapter($configKey);
+        }
 
         $path = md5(microtime());
         $path = str_split($path, 2);
@@ -108,22 +117,22 @@ class Upload extends Files
 
         $this->assign($fileinfo);
         if ($this->save()) {
-            if (!$filesystem->has($path)) {
-                if ($filesystem->write($path, file_get_contents($tmp))) {
-                    unlink($tmp);
-                } else {
-                    throw new Exception\IOException('ERR_FILE_MOVE_TO_STORAGE_FAILED');
-                }
+//            if (!$filesystem->has($path)) {
+            if ($filesystem->write($path, file_get_contents($tmp))) {
+                unlink($tmp);
             } else {
-                throw new Exception\ResourceConflictException('ERR_FILE_UPLOAD_BY_CONFLICT_NAME');
+                throw new Exception\IOException('ERR_FILE_MOVE_TO_STORAGE_FAILED');
             }
+//            } else {
+//                throw new Exception\ResourceConflictException('ERR_FILE_UPLOAD_BY_CONFLICT_NAME');
+//            }
         } else {
             throw new Exception\RuntimeException('ERR_FILE_SAVE_TO_DB_FAILED');
         }
         return $this;
     }
 
-    public function uploadByEncodedData($data, $originalName, $mimeType = null)
+    public function uploadByEncodedData($data, $originalName, $mimeType = null, $configKey = 'default')
     {
         if (!$headPos = strpos($data, ',')) {
             throw new Exception\InvalidArgumentException('ERR_FILE_ENCODED_UPLOAD_FORMAT_INCORRECT');
@@ -134,7 +143,7 @@ class Upload extends Files
 
         $tmpName = Text::random(\Phalcon\Text::RANDOM_ALNUM, 6);
         $tmpPath = $this->getUploadTmpPath();
-        $tmp =  $tmpPath . '/' . $tmpName;
+        $tmp = $tmpPath . '/' . $tmpName;
         $adapter = new \Gaufrette\Adapter\Local($tmpPath);
         $filesystem = new \Gaufrette\Filesystem($adapter);
         $filesystem->write($tmpName, $data);
@@ -169,6 +178,7 @@ class Upload extends Files
             'fileExtension' => $fileExtension,
             'fileHash' => $fileHash,
             'isImage' => $isImage,
+            'configKey' => $configKey,
             'fileName' => $fileName . '.' . $fileExtension,
             'createdAt' => time(),
         );
@@ -179,7 +189,12 @@ class Upload extends Files
             $fileinfo['imageHeight'] = $image[1];
         }
 
-        $filesystem = $this->getDI()->getFileSystem();
+        /** @var \Gaufrette\Adapter $filesystem */
+        if ($configKey == 'default') {
+            $filesystem = $this->getDI()->getFileSystem();
+        } else {
+            $filesystem = AdapterFactory::getAdapter($configKey);
+        }
 
         $path = md5(time());
         $path = str_split($path, 2);
@@ -193,15 +208,15 @@ class Upload extends Files
 
         $this->assign($fileinfo);
         if ($this->save()) {
-            if (!$filesystem->has($path)) {
-                if ($filesystem->write($path, file_get_contents($tmp))) {
-                    unlink($tmp);
-                } else {
-                    throw new Exception\IOException('ERR_FILE_MOVE_TO_STORAGE_FAILED');
-                }
+//            if (!$filesystem->has($path)) {
+            if ($filesystem->write($path, file_get_contents($tmp))) {
+                unlink($tmp);
             } else {
-                throw new Exception\ResourceConflictException('ERR_FILE_UPLOAD_BY_CONFLICT_NAME');
+                throw new Exception\IOException('ERR_FILE_MOVE_TO_STORAGE_FAILED');
             }
+//            } else {
+//                throw new Exception\ResourceConflictException('ERR_FILE_UPLOAD_BY_CONFLICT_NAME');
+//            }
         } else {
             throw new Exception\RuntimeException('ERR_FILE_SAVE_TO_DB_FAILED');
         }

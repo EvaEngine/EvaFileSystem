@@ -18,6 +18,9 @@ class Module implements ModuleDefinitionInterface, StandardInterface
 
     public static function registerGlobalEventListeners()
     {
+        return array(
+
+        );
     }
 
     public static function registerGlobalViewHelpers()
@@ -36,16 +39,19 @@ class Module implements ModuleDefinitionInterface, StandardInterface
      */
     public function registerAutoloaders()
     {
+
     }
 
     /**
      * Registers the module-only services
      *
-     * @param $di
+     * @param \Phalcon\DI $di
      */
     public function registerServices($di)
     {
         $dispatcher = $di->getDispatcher();
         $dispatcher->setDefaultNamespace('Eva\EvaFileSystem\Controllers');
+
     }
+
 }
