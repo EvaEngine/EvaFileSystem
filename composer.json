@@ -5,16 +5,16 @@
     "minimum-stability": "dev",
     "authors": [
         {
-        "name": "AlloVince",
-        "email": "allo.vince@gmail.com",
-        "homepage": "http://avnpc.com"
-    }
+            "name": "AlloVince",
+            "email": "allo.vince@gmail.com",
+            "homepage": "http://avnpc.com"
+        }
     ],
     "require": {
-	"allovince/evacommon" : "dev-master"
+        "evaengine/eva-common": "dev-master"
     },
     "autoload": {
-	"classmap" : ["Module.php"],
+        "classmap": ["Module.php"],
         "psr-4": {"Eva\\EvaFileSystem\\": "src/EvaFileSystem"}
     }
 }
