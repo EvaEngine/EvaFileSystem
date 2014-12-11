@@ -1,5 +1,5 @@
 {
-    "name": "allovince/evafilesystem",
+    "name": "evaengine/eva-filesystem",
     "description": "Standard Media Module of EvaEngine",
     "license": "BSD-3-Clause",
     "minimum-stability": "dev",
