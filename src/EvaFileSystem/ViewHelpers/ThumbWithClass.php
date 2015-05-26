@@ -11,32 +11,20 @@ namespace Eva\EvaFileSystem\ViewHelpers;
 // + ThumbWithClass.php
 // +----------------------------------------------------------------------
 
-use Eva\EvaFileSystem\Entities\Files;
+use Eva\EvaFileSystem\Adapter\AdapterFactory;
 use Phalcon\Text;
 
-class ThumbWithClass extends Files
+class ThumbWithClass
 {
     public function __invoke($filename, $styleClass, $configKey = 'default')
     {
         if (Text::startsWith($filename, 'http://www.gravatar.com/', false)) {
             return $filename;
         }
-        $config = $this->getDI()->getConfig();
-        if ($configKey == 'default') {
-            if (isset($config->thumbnail->$configKey->baseUri) && $baseUrl = $config->thumbnail->$configKey->baseUri) {
-                $config = $this->getConfig();
-                $classSeparator = $config->thumbClassSeparator ? $config->thumbClassSeparator : '!';
 
-                $uri = $filename . $classSeparator . $styleClass;
+        $adapter = AdapterFactory::getAdapter($configKey);
 
-                $baseUrl = Text::startsWith($filename, 'http://', false) ? '' : $baseUrl;
-                return $baseUrl . $uri;
-            }
-        } else {
-            /** @var \Eva\EvaFileSystem\Adapter\AdapterAbstract $adapter */
-            $adapter = $this->getDI()->get($configKey . 'Filesystem');
-            return $adapter->thumbWitchClass($filename, $styleClass, $configKey);
-        }
-        return $filename;
+        return $adapter->thumbWitchClass($filename, $styleClass, $configKey);
+
     }
 }

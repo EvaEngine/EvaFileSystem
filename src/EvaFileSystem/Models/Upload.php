@@ -99,11 +99,11 @@ class Upload extends Files
             $fileinfo['imageHeight'] = $image[1];
         }
         /** @var \Gaufrette\Adapter $filesystem */
-        if ($configKey == 'default') {
-            $filesystem = $this->getDI()->getFileSystem();
-        } else {
-            $filesystem = AdapterFactory::getAdapter($configKey);
-        }
+//        if ($configKey == 'default') {
+//            $filesystem = $this->getDI()->getFileSystem();
+//        } else {
+        $filesystem = AdapterFactory::getAdapter($configKey);
+//        }
 
         $path = md5(microtime());
         $path = str_split($path, 2);
@@ -129,6 +129,7 @@ class Upload extends Files
         } else {
             throw new Exception\RuntimeException('ERR_FILE_SAVE_TO_DB_FAILED');
         }
+
         return $this;
     }
 

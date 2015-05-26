@@ -9,15 +9,26 @@ namespace Eva\EvaFileSystem\Adapter;
 
 use Eva\EvaEngine\IoC;
 
-class AdapterFactory {
-    public static  function getAdapter($configKey)
-    {
-        /** @var \Phalcon\Config $config */
-        $config = IoC::get('config');
-        $adapterClass = $config->filesystem->$configKey->adapter;
-        $adapterOptions = $config->filesystem->$configKey->options;
-        $adapter = new $adapterClass($adapterOptions);
+class AdapterFactory
+{
+    protected static $adapters = [];
 
-        return $adapter;
+    /**
+     * @param $configKey
+     * @return \Eva\EvaFileSystem\Adapter\AdapterAbstract
+     * @throws \Eva\EvaEngine\Exception\RuntimeException
+     */
+    public static function getAdapter($configKey)
+    {
+        if (!isset(static::$adapters[$configKey])) {
+            /** @var \Phalcon\Config $config */
+            $config = IoC::get('config');
+            $adapterClass = $config->filesystem->$configKey->adapter;
+            $adapterOptions = $config->filesystem->$configKey->options;
+            static::$adapters[$configKey] = new $adapterClass($adapterOptions);
+        }
+
+
+        return static::$adapters[$configKey];
     }
 } 

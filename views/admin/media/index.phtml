@@ -125,7 +125,8 @@
                             <td class="hidden-480"><?=$item->id?></td>
                             <td>
                                 <?if($item->isImage):?>
-                                <a href="<?=$item->getFullUrl()?>"><img src="<?=$this->tag->thumb($item->getLocalUrl(), 'c_fill,h_30,w_40')?>" /></a>
+<!--                                    --><?//dd($item->toArray())?>
+                                <a href="<?=$item->getFullUrl()?>"><img src="<?=$this->tag->thumbWithClass($item->getLocalUrl(), 'admin.media.cover', $item->configKey)?>" style="width:40px;height:30px;"/></a>
                                 <?endif?>
                                 <a href="/admin/media/edit/<?=$item->id?>"><?=$item->originalName?></a>
                             </td>

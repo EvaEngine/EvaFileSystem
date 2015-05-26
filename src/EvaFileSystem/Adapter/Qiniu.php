@@ -21,7 +21,6 @@ class Qiniu extends AdapterAbstract implements
         \Qiniu_setKeys($options['accessKey'], $options['secretKey']);
         $this->bucket = $options['bucket'];
         $this->client = new \Qiniu_MacHttpClient(null);
-        $this->config = $this->getDI()->getConfig();
     }
 
     /**
@@ -150,11 +149,6 @@ class Qiniu extends AdapterAbstract implements
         } else {
             return $ret;
         }
-    }
-
-    public function thumbWitchClass($filename, $styleClass, $configKey)
-    {
-//        $this->config
     }
 
     public function url($filename, $configKey)

@@ -3,6 +3,7 @@
 namespace Eva\EvaFileSystem\Entities;
 
 use Eva\EvaEngine\Exception;
+use Eva\EvaFileSystem\ViewHelpers\ThumbWithClass;
 
 class Files extends \Eva\EvaEngine\Mvc\Model
 {
@@ -125,7 +126,7 @@ class Files extends \Eva\EvaEngine\Mvc\Model
     /**
      * @var string
      */
-    public  $configKey = 'default';
+    public $configKey = 'default';
 
     private $configReady = false;
 
@@ -142,36 +143,43 @@ class Files extends \Eva\EvaEngine\Mvc\Model
     public function getUploadPath()
     {
         $this->readConfig();
+
         return $this->uploadPath;
     }
 
     public function getUploadTmpPath()
     {
         $this->readConfig();
+
         return $this->uploadTmpPath;
     }
 
     public function getUploadPathLevel()
     {
         $this->readConfig();
+
         return $this->uploadPathLevel;
     }
 
     public function getBaseUrlForLocal()
     {
         $this->readConfig();
+
+//        p($this->baseUrlForLocal);
         return $this->baseUrlForLocal;
     }
 
     public function getBaseUrl()
     {
         $this->readConfig();
+
         return $this->baseUrl;
     }
 
     public function setConfigKey($configKey)
     {
         $this->configKey = $configKey;
+
         return $this;
     }
 
@@ -184,8 +192,10 @@ class Files extends \Eva\EvaEngine\Mvc\Model
     {
         $configKey = $this->configKey;
         if (empty($this->getDI()->getConfig()->filesystem->$configKey)) {
-            throw new Exception\InvalidArgumentException(sprintf('No matched file system config key %s found', $configKey));
+            throw new Exception\InvalidArgumentException(sprintf('No matched file system config key %s found',
+                $configKey));
         }
+
         return $this->getDI()->getConfig()->filesystem->$configKey;
     }
 
@@ -196,26 +206,25 @@ class Files extends \Eva\EvaEngine\Mvc\Model
 //        }
         $config = $this->getConfig();
 
-        $this->uploadPath = $config->uploadPath;
-        $this->uploadTmpPath = $config->uploadTmpPath;
-        $this->uploadPathLevel = $config->uploadPathLevel;
-        $this->baseUrlForLocal = $config->baseUrlForLocal;
-        $this->baseUrl= $config->baseUrl;
+        $this->uploadPath = @$config->uploadPath;
+        $this->uploadTmpPath = @$config->uploadTmpPath;
+        $this->uploadPathLevel = @$config->uploadPathLevel;
+        $this->baseUrlForLocal = @$config->baseUrlForLocal;
+        $this->baseUrl = @$config->baseUrl;
         $this->configReady = true;
+
         return $this;
     }
 
 
-    public function getFullUrl()
+    public function getFullUrl($style = '')
     {
         if (!$this->id) {
             return '';
         }
-        if ($url = $this->getBaseUrl()) {
-            return $url . '/' . $this->filePath . '/' . $this->fileName;
-        }
+        $thumbWithClass = new ThumbWithClass();
 
-        return $this->getLocalUrl();
+        return $thumbWithClass($this->getLocalUrl(), $style);
     }
 
     public function getLocalUrl()
@@ -224,7 +233,12 @@ class Files extends \Eva\EvaEngine\Mvc\Model
             return '';
         }
 
-        return $this->getBaseUrlForLocal() . '/' . $this->filePath . '/' . $this->fileName;
+        return
+            rtrim($this->getBaseUrlForLocal(), '/')
+            . '/'
+            . trim($this->filePath, '/')
+            . '/'
+            . ltrim($this->fileName, '/');
     }
 
     public function getLocalPath()
@@ -233,7 +247,7 @@ class Files extends \Eva\EvaEngine\Mvc\Model
             return '';
         }
 
-        return $this->getUploadPath() . '/'. $this->filePath . '/' . $this->fileName;
+        return $this->getUploadPath() . '/' . $this->filePath . '/' . $this->fileName;
     }
 
     public function getReadableFileSize()
