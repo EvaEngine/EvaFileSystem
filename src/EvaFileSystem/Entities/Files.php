@@ -224,7 +224,7 @@ class Files extends \Eva\EvaEngine\Mvc\Model
         }
         $thumbWithClass = new ThumbWithClass();
 
-        return $thumbWithClass($this->getLocalUrl(), $style);
+        return $thumbWithClass($this->getLocalUrl(), $style, $this->configKey);
     }
 
     public function getLocalUrl()
