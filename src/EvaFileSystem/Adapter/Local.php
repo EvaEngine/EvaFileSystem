@@ -27,7 +27,7 @@ class Local extends AdapterAbstract
      */
     public function read($key)
     {
-        $this->storage->read($key);
+        return $this->storage->read($key);
     }
 
     /**
@@ -40,7 +40,7 @@ class Local extends AdapterAbstract
      */
     public function write($key, $content)
     {
-        $this->storage->write($key, $content);
+        return $this->storage->write($key, $content);
     }
 
     /**
@@ -52,7 +52,7 @@ class Local extends AdapterAbstract
      */
     public function exists($key)
     {
-        $this->storage->exists($key);
+        return $this->storage->exists($key);
     }
 
     /**
@@ -62,7 +62,7 @@ class Local extends AdapterAbstract
      */
     public function keys()
     {
-        $this->storage->keys();
+        return $this->storage->keys();
     }
 
     /**
@@ -74,7 +74,7 @@ class Local extends AdapterAbstract
      */
     public function mtime($key)
     {
-        $this->storage->mtime($key);
+        return $this->storage->mtime($key);
     }
 
     /**
@@ -86,7 +86,7 @@ class Local extends AdapterAbstract
      */
     public function delete($key)
     {
-        $this->storage->delete($key);
+        return $this->storage->delete($key);
     }
 
     /**
