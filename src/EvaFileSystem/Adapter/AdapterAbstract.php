@@ -42,6 +42,24 @@ abstract class AdapterAbstract extends Component implements Adapter
             $separator = $config->thumbClassSeparator;
         }
         $styleClass = trim($styleClass);
+
+        if (Text::startsWith($filename, 'http://', false) || Text::startsWith($filename, 'https://', false)) {
+            $filesystem = IoC::get('config')->filesystem;
+            $flag = true;
+            foreach ($filesystem as $c) {
+                if (isset($c->baseUrl)) {
+                    if (Text::startsWith($filename, $c->baseUrl, false)) {
+                        $flag = false;
+                        break;
+                    }
+                }
+            }
+
+            if ($flag) {
+                $styleClass = '';
+            }
+        }
+
         $uri = $styleClass ? $filename . $separator . $styleClass : $filename;
         $baseUrl = $config->baseUrl;
         $baseUrl = Text::startsWith($filename, 'http://', false) ? '' : $baseUrl;
